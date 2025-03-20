@@ -10,6 +10,10 @@ import { submitForReview } from './submission.js'
 import { getInsight, addRecipe, getRecipe, removeRecipe } from './city.js';
 import { getWeather } from './weather.js';
 
+const fastify = Fastify({
+  logger: true,
+})
+
 
 fastify.get('/cities/:cityId/infos', async (request, reply) => {
   const { cityId } = request.params;
@@ -91,9 +95,7 @@ fastify.delete('/cities/:cityId/recipes/:recipeId', async (request, reply) => {
 
 
 
-const fastify = Fastify({
-  logger: true,
-})
+
 
 fastify.listen(
   {
