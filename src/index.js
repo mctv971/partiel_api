@@ -17,24 +17,33 @@ const fastify = Fastify({
 
 fastify.get('/cities/:cityId/infos', async (request, reply) => {
   const { cityId } = request.params;
-  
-  // Appeler les deux fonctions pour récupérer les données
+
+  // Récupération des données depuis City API et Weather API
   const insightData = await getInsight(cityId);
   const weatherData = await getWeather(cityId);
-  
-  // Combiner les deux objets JSON
-  const combinedData = { ...insightData, ...weatherData };
-  
-  // Récupérer les recettes associées à la ville
-  const recipes = getRecipe(cityId);
-  
-  // Si des recettes existent, on les ajoute dans la réponse
-  if (recipes && recipes.length > 0) {
-    combinedData.recipes = recipes;
+
+  // Vérifier que la ville existe bien (par exemple en testant la présence de coordonnées)
+  if (!insightData || !insightData.coordinates) {
+    return reply.code(404).send({ error: `Ville avec l'id ${cityId} non trouvée.` });
   }
-  
-  reply.send(combinedData);
+
+  // Construire la réponse au format attendu
+  const responseData = {
+    // Convertir l'objet "coordinates" en tableau [latitude, longitude]
+    coordinates: [insightData.coordinates.latitude, insightData.coordinates.longitude],
+    population: insightData.population,
+    knownFor: insightData.knownFor,
+    // Utiliser la donnée weather modifiée (WeatherPredictions) et la renommer en "weatherPredictions"
+    weatherPredictions: Array.isArray(weatherData) && weatherData.length > 0
+      ? weatherData[0].predictions
+      : [],
+    // Ajouter les recettes associées (ou un tableau vide si aucune)
+    recipes: getRecipe(cityId) || []
+  };
+
+  reply.send(responseData);
 });
+
 
 
 
