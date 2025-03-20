@@ -65,8 +65,8 @@ fastify.post('/cities/:cityId/recipes', async (request, reply) => {
 
   // Vérifier si la ville existe via City API
   const insightData = await getInsight(cityId);
-  if (!insightData) {
-    return reply.code(404).send({ error: `Ville avec l'id ${cityId} non trouvée.` });
+  if (insightData.error) {
+    return reply.code(404).send({ error: insightData.error });
   }
 
   // Création et stockage de la recette
