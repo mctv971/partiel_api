@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+const API_KEY = process.env.API_KEY;
+
 export async function getWeather(cityId) {
     const url = 'https://api-ugi2pflmha-ew.a.run.app/cities/'+cityId+'/insights';
     const options = {
