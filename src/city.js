@@ -4,23 +4,24 @@ dotenv.config();
 const API_KEY = process.env.API_KEY;
 
 export async function getInsight(cityId) {
-    const url = 'https://api-ugi2pflmha-ew.a.run.app/cities/'+cityId+'/insights';
-    const options = {
-        method: 'GET',
-        headers: {
-          accept: 'application/json',
-          Authorization: `Bearer ${API_KEY}`
-        }
-      };
-    try {
-        const response = await fetch(url, options);
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error(error);
+  const API_KEY = process.env.API_KEY;
+  const url = `https://api-ugi2pflmha-ew.a.run.app/cities/${cityId}/insights?apiKey=${API_KEY}`;
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json'
     }
+  };
 
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
 }
+
 
 
 // Variables pour stocker les recettes en mémoire
